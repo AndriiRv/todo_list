@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>To do list</title>
+    <link th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css}"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+</head>
+<body class="bg-light">
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>To do list</h2>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8 order-md-1">
+            <h4 class="mb-3">Input data of task</h4>
+            <form method="post" action="/addListOfTask">
+                <div class="mb-3">
+                    <label for="idListTask">Add list</label>
+                    <input type="text" class="form-control" name="headlineOfList" placeholder="Title of list"
+                           id="idListTask"
+                           th:value="${task.headlineOfList}" required>
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" id="submitBtn" type="submit">Add list of task</button>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8 order-md-1">
+            <form method="post" action="/addTask">
+                <div class="mb-3">
+                    <label for="idHeadlineTask">Headline</label>
+                    <input type="text" class="form-control" name="headlineOfTask" placeholder="Headline of task"
+                           id="idHeadlineTask"
+                           th:value="${task.headlineOfTask}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="idTitleTask">Title</label>
+                    <input type="text" class="form-control" name="titleOfTask" placeholder="Title of task"
+                           id="idTitleTask"
+                           th:value="${task.titleOfTask}" required>
+                </div>
+                <div class="mb-3" th:object="${listOfTask}">
+                    <label for="idListAddTask">Title of List</label>
+                    <select size="4" name="idList" id="idListAddTask"
+                            class="custom-select d-block w-100 select"
+                            oninvalid="setCustomValidity('Select the list of task')"
+                            oninput="setCustomValidity('')" required>
+                        <option th:each="taskList: ${listOfTask}"
+                                th:value="${taskList.idList}"
+                                th:text="${taskList.idList} + '. ' + ${taskList.headlineOfList}"></option>
+                    </select>
+                </div>
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" id="submitBtnTask" type="submit">Add task</button>
+            </form>
+        </div>
+    </div>
+    <br/>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8 order-md-1">
+            <div th:if="${not #lists.isEmpty(listOfTask)}">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title of list</th>
+                        <th>Date</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="listTask: ${listOfTask}" class="table-success">
+                        <td th:text="${listTask.idList}"></td>
+                        <td th:text="${listTask.headlineOfList}"></td>
+                        <td th:text="${listTask.date}"></td>
+                        <td>
+                            <a th:href="@{'/doDeleteListTask/idList=' + ${listTask.idList}}">
+                                <span>Delete list</span>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8 order-md-1">
+            <div th:if="${not #lists.isEmpty(taskList)}">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th>List</th>
+                        <th>Headline task</th>
+                        <th>Title</th>
+                        <th>Date</th>
+                        <th>Done</th>
+                        <th>Do done</th>
+                        <th>Do undone</th>
+                        <th>Delete</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="task: ${taskList}" class="table-success">
+                        <td th:text="${task.idList} + '. ' + ${task.headlineOfList}"></td>
+                        <td th:text="${task.headlineOfTask}"></td>
+                        <td th:text="${task.titleOfTask}"></td>
+                        <td th:text="${task.date}"></td>
+                        <td th:text="${task.done}"></td>
+                        <td>
+                            <a th:href="@{'/doDoneUndone/idTask=' + ${task.idTask} + '/doneUndone=' + ${true}}">
+                                <span>Done</span>
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="@{'/doDoneUndone/idTask=' + ${task.idTask} + '/doneUndone=' + ${false}}">
+                                <span>Undone</span>
+                            </a>
+                        </td>
+                        <td>
+                            <a th:href="@{'/doDeleteTask/idTask=' + ${task.idTask} + '/idList=' + ${task.idList}}">
+                                <span>Delete</span>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="py-5 text-center">
+        <h3 th:if="${#lists.isEmpty(taskList)}">
+            <h2>Here will are your tasks.</h2>
+        </h3>
+    </div>
+</div>
+</body>
+</html>
