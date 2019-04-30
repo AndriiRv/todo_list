@@ -7,6 +7,7 @@
           rel="stylesheet"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
+    <link th:href="@{css/backToTop.css}" rel="stylesheet">
 </head>
 <body class="bg-light">
 <div class="container">
@@ -15,130 +16,133 @@
     </div>
     <div class="row d-flex justify-content-center">
         <div class="col-md-8 order-md-1">
-            <h4 class="mb-3">Input data of task</h4>
+            <h4 class="mb-3">For start add list of tasks</h4>
             <form method="post" action="/addListOfTask">
                 <div class="mb-3">
                     <label for="idListTask">Add list</label>
                     <input type="text" class="form-control" name="headlineOfList" placeholder="Title of list"
                            id="idListTask"
-                           th:value="${task.headlineOfList}" required>
+                           th:value="${task.headlineOfList}"
+                           oninvalid="setCustomValidity('Input title of list')"
+                           oninput="setCustomValidity('')" required>
                 </div>
                 <hr class="mb-4">
                 <button class="btn btn-primary btn-lg btn-block" id="submitBtn" type="submit">Add list of task</button>
             </form>
         </div>
     </div>
-    <br/>
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-8 order-md-1">
-            <form method="post" action="/addTask">
-                <div class="mb-3">
-                    <label for="idHeadlineTask">Headline</label>
-                    <input type="text" class="form-control" name="headlineOfTask" placeholder="Headline of task"
-                           id="idHeadlineTask"
-                           th:value="${task.headlineOfTask}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="idTitleTask">Title</label>
-                    <input type="text" class="form-control" name="titleOfTask" placeholder="Title of task"
-                           id="idTitleTask"
-                           th:value="${task.titleOfTask}" required>
-                </div>
-                <div class="mb-3" th:object="${listOfTask}">
-                    <label for="idListAddTask">Title of List</label>
-                    <select size="4" name="idList" id="idListAddTask"
-                            class="custom-select d-block w-100 select"
-                            oninvalid="setCustomValidity('Select the list of task')"
-                            oninput="setCustomValidity('')" required>
-                        <option th:each="taskList: ${listOfTask}"
-                                th:value="${taskList.idList}"
-                                th:text="${taskList.idList} + '. ' + ${taskList.headlineOfList}"></option>
-                    </select>
-                </div>
-                <hr class="mb-4">
-                <button class="btn btn-primary btn-lg btn-block" id="submitBtnTask" type="submit">Add task</button>
-            </form>
-        </div>
-    </div>
-    <br/>
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-8 order-md-1">
-            <div th:if="${not #lists.isEmpty(listOfTask)}">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Title of list</th>
-                        <th>Date</th>
-                        <th>Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="listTask: ${listOfTask}" class="table-success">
-                        <td th:text="${listTask.idList}"></td>
-                        <td th:text="${listTask.headlineOfList}"></td>
-                        <td th:text="${listTask.date}"></td>
-                        <td>
-                            <a th:href="@{'/doDeleteListTask/idList=' + ${listTask.idList}}">
-                                <span>Delete list</span>
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+    <div th:if="${not #lists.isEmpty(listOfTask)}"><br/>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">Next, add tasks to created list</h4>
+                <form method="post" action="/addTask">
+                    <div class="row" style="width: 125%;">
+                        <div class="col-md-5 mb-3">
+                            <label for="idHeadlineTask">Headline</label>
+                            <input type="text" class="form-control" name="headlineOfTask" placeholder="Headline of task"
+                                   id="idHeadlineTask"
+                                   th:value="${task.headlineOfTask}"
+                                   oninvalid="setCustomValidity('Input headline of task')"
+                                   oninput="setCustomValidity('')" required>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="idTitleTask">Title</label>
+                            <input type="text" class="form-control" name="titleOfTask" placeholder="Title of task"
+                                   id="idTitleTask"
+                                   th:value="${task.titleOfTask}"
+                                   oninvalid="setCustomValidity('Input title of task')"
+                                   oninput="setCustomValidity('')" required>
+                        </div>
+                        <div class="col-md-5 mb-3">
+                            <label for="idListAddTask">Title of List</label>
+                            <select size="4" name="idList" id="idListAddTask"
+                                    class="custom-select d-block w-100 select"
+                                    oninvalid="setCustomValidity('Select the list of task')"
+                                    oninput="setCustomValidity('')" required>
+                                <option th:each="taskList: ${listOfTask}"
+                                        th:value="${taskList.idList}"
+                                        th:text="${taskList.idList} + '. ' + ${taskList.headlineOfList}"></option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" id="submitBtnTask" type="submit">Add task</button>
+                </form>
             </div>
         </div>
     </div>
-    <br/>
-    <div class="row d-flex justify-content-center">
-        <div class="col-md-8 order-md-1">
-            <div th:if="${not #lists.isEmpty(taskList)}">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                    <tr>
-                        <th>List</th>
-                        <th>Headline task</th>
-                        <th>Title</th>
-                        <th>Date</th>
-                        <th>Done</th>
-                        <th>Do done</th>
-                        <th>Do undone</th>
-                        <th>Delete</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="task: ${taskList}" class="table-success">
-                        <td th:text="${task.idList} + '. ' + ${task.headlineOfList}"></td>
-                        <td th:text="${task.headlineOfTask}"></td>
-                        <td th:text="${task.titleOfTask}"></td>
-                        <td th:text="${task.date}"></td>
-                        <td th:text="${task.done}"></td>
-                        <td>
-                            <a th:href="@{'/doDoneUndone/idTask=' + ${task.idTask} + '/doneUndone=' + ${true}}">
-                                <span>Done</span>
-                            </a>
-                        </td>
-                        <td>
-                            <a th:href="@{'/doDoneUndone/idTask=' + ${task.idTask} + '/doneUndone=' + ${false}}">
-                                <span>Undone</span>
-                            </a>
-                        </td>
-                        <td>
-                            <a th:href="@{'/doDeleteTask/idTask=' + ${task.idTask} + '/idList=' + ${task.idList}}">
-                                <span>Delete</span>
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div th:if="${not #lists.isEmpty(listOfTask)}"><br/>
+        <h2>Lists of tasks</h2>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th style="width: 5%" scope="col">ID</th>
+                <th style="width: 50%" scope="col">Title of list</th>
+                <th style="width: 15%" scope="col">Date of create list</th>
+                <th class="text-center" style="width: 15%" scope="col">Delete list</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="listTask: ${listOfTask}" class="table-success">
+                <td th:text="${listTask.idList}"></td>
+                <td th:text="${listTask.headlineOfList}"></td>
+                <td th:text="${listTask.date}"></td>
+                <td align="center">
+                    <a th:href="@{'/doDeleteListTask/idList=' + ${listTask.idList}}">
+                        <span>Delete</span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div th:if="${not #lists.isEmpty(taskList)}">
+        <h2>Tasks</h2>
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>List</th>
+                <th>Headline task</th>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Done</th>
+                <th class="text-center">Delete task</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task: ${taskList}" class="table-success">
+                <td th:text="${task.idList} + '. ' + ${task.headlineOfList}"></td>
+                <td th:text="${task.headlineOfTask}"></td>
+                <td th:text="${task.titleOfTask}"></td>
+                <td th:text="${task.date}"></td>
+                <td>
+                    <span th:text="${task.done}"></span>
+                    <a th:if="!${task.done}"
+                       th:href="@{'/doDoneUndone/idTask=' + ${task.idTask} + '/doneUndone=' + ${true}}">
+                        <span>Do Done</span>
+                    </a>
+                    <a th:if="${task.done}"
+                       th:href="@{'/doDoneUndone/idTask=' + ${task.idTask} + '/doneUndone=' + ${false}}">
+                        <span>Do Undone</span>
+                    </a>
+                </td>
+                <td align="center">
+                    <a th:href="@{'/doDeleteTask/idTask=' + ${task.idTask} + '/idList=' + ${task.idList}}">
+                        <span>Delete</span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="py-5 text-center">
-        <h3 th:if="${#lists.isEmpty(taskList)}">
-            <h2>Here will are your tasks.</h2>
+        <h3 th:if="${#lists.isEmpty(taskList)} AND ${#lists.isEmpty(listOfTask)}">
+            <h2>Here will be your tasks and lists to them</h2>
         </h3>
     </div>
 </div>
+<a href="#" id="back-to-top" title="Back to top">&uarr;</a>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script th:src="@{/js/backToTop.js}"></script>
 </body>
 </html>
