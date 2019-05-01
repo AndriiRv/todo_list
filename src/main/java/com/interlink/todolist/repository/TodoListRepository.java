@@ -1,7 +1,7 @@
 package com.interlink.todolist.repository;
 
 import com.interlink.todolist.dto.Task;
-import com.interlink.todolist.rowMapper.ListTaskRowMapper;
+import com.interlink.todolist.rowMapper.ListOfTaskRowMapper;
 import com.interlink.todolist.rowMapper.TaskRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -13,20 +13,21 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
 public class TodoListRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
-    private final ListTaskRowMapper listTaskRowMapper;
+    private final ListOfTaskRowMapper listOfTaskRowMapper;
     private final TaskRowMapper taskRowMapper;
 
     @Autowired
     public TodoListRepository(NamedParameterJdbcTemplate jdbcTemplate,
-                              ListTaskRowMapper listTaskRowMapper,
+                              ListOfTaskRowMapper listOfTaskRowMapper,
                               TaskRowMapper taskRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
-        this.listTaskRowMapper = listTaskRowMapper;
+        this.listOfTaskRowMapper = listOfTaskRowMapper;
         this.taskRowMapper = taskRowMapper;
     }
 
@@ -41,7 +42,7 @@ public class TodoListRepository {
     public void addTask(Task task, Integer idList) {
         String sqlAddTask = "INSERT INTO task(id_list, headline, title, date, done) VALUES(:id_list, :headline, :title, :date, :done)";
         SqlParameterSource parameterAddTask = new MapSqlParameterSource()
-                .addValue("id_list", getListById(idList).getIdList())
+                .addValue("id_list", Objects.requireNonNull(getListById(idList)).getIdList())
                 .addValue("headline", task.getHeadlineOfTask())
                 .addValue("title", task.getTitleOfTask())
                 .addValue("date", LocalDate.now())
@@ -49,10 +50,10 @@ public class TodoListRepository {
         jdbcTemplate.update(sqlAddTask, parameterAddTask);
     }
 
-    public Task getListById(Integer idList) {
+    private Task getListById(Integer idList) {
         try {
             String sql = "SELECT * FROM list_task WHERE id = :id";
-            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", idList), listTaskRowMapper);
+            return jdbcTemplate.queryForObject(sql, new MapSqlParameterSource("id", idList), listOfTaskRowMapper);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -63,6 +64,17 @@ public class TodoListRepository {
         SqlParameterSource parameterChangeTaskIsDone = new MapSqlParameterSource()
                 .addValue("done", valueDone)
                 .addValue("id", idTask);
+        jdbcTemplate.update(sqlChangeTaskIsDone, parameterChangeTaskIsDone);
+    }
+
+    public void changeHeadlineAndTitleInTaskAndListOfTask(String nameOfTable,
+                                                          String id, Integer idValue,
+                                                          String nameOfColumn, String value) {
+        String sqlChangeTaskIsDone = "UPDATE " + nameOfTable + " SET " + nameOfColumn + " = :" + nameOfColumn +
+                " WHERE " + id + " = :" + id + "";
+        SqlParameterSource parameterChangeTaskIsDone = new MapSqlParameterSource()
+                .addValue(nameOfColumn, value)
+                .addValue(id, idValue);
         jdbcTemplate.update(sqlChangeTaskIsDone, parameterChangeTaskIsDone);
     }
 
@@ -77,7 +89,7 @@ public class TodoListRepository {
 
     public List<Task> getListOfTask() {
         String sql = "SELECT * FROM list_task";
-        List<Task> orders = jdbcTemplate.query(sql, listTaskRowMapper);
+        List<Task> orders = jdbcTemplate.query(sql, listOfTaskRowMapper);
         orders = orders.stream()
                 .sorted(Comparator.comparing(Task::getIdList))
                 .collect(Collectors.toList());
@@ -91,7 +103,7 @@ public class TodoListRepository {
                 .addValue("id_list", idList));
     }
 
-    public void deleteListTask(Integer idList) {
+    public void deleteListOfTask(Integer idList) {
         String sqlDeleteList = "DELETE FROM list_task WHERE id = :id";
         jdbcTemplate.update(sqlDeleteList, new MapSqlParameterSource("id", idList));
     }

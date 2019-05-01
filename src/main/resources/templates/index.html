@@ -72,29 +72,41 @@
         </div>
     </div>
     <div th:if="${not #lists.isEmpty(listOfTask)}"><br/>
-        <h2>Lists of tasks</h2>
-        <table class="table table-bordered table-hover">
-            <thead>
-            <tr>
-                <th style="width: 5%" scope="col">ID</th>
-                <th style="width: 50%" scope="col">Title of list</th>
-                <th style="width: 15%" scope="col">Date of create list</th>
-                <th class="text-center" style="width: 15%" scope="col">Delete list</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="listTask: ${listOfTask}" class="table-success">
-                <td th:text="${listTask.idList}"></td>
-                <td th:text="${listTask.headlineOfList}"></td>
-                <td th:text="${listTask.date}"></td>
-                <td align="center">
-                    <a th:href="@{'/doDeleteListTask/idList=' + ${listTask.idList}}">
-                        <span>Delete</span>
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-8 order-md-1">
+                <h2>Lists of tasks</h2>
+                <table class="table table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <th style="width: 5%" scope="col">ID</th>
+                        <th style="width: 50%" scope="col">Title of list</th>
+                        <th style="width: 15%" scope="col">Date of create list</th>
+                        <th class="text-center" style="width: 15%" scope="col">Delete list</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="listTask: ${listOfTask}" class="table-success">
+                        <td th:text="${listTask.idList}"></td>
+                        <td>
+                            <input type="text" class="headlineOfListOfTask form-control" name="headlineOfListOfTask"
+                                   placeholder="Headline of list of task"
+                                   th:value="${listTask.headlineOfList}" required>
+                            <a th:href="@{'/doChangeHeadlineInListOfTask/idList=' + ${listTask.idList} + '/headlineInListOfTask='}"
+                               class="linkForHeadlineOfListOfTask">
+                                Accept rename
+                            </a>
+                        </td>
+                        <td th:text="${listTask.date}"></td>
+                        <td align="center">
+                            <a th:href="@{'/doDeleteListTask/idList=' + ${listTask.idList}}">
+                                <span>Delete</span>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
     <div th:if="${not #lists.isEmpty(taskList)}">
         <h2>Tasks</h2>
@@ -112,8 +124,23 @@
             <tbody>
             <tr th:each="task: ${taskList}" class="table-success">
                 <td th:text="${task.idList} + '. ' + ${task.headlineOfList}"></td>
-                <td th:text="${task.headlineOfTask}"></td>
-                <td th:text="${task.titleOfTask}"></td>
+                <td>
+                    <input type="text" class="headlineOfTask form-control" name="headlineOfTask"
+                           placeholder="Headline of task"
+                           th:value="${task.headlineOfTask}" required>
+                    <a th:href="@{'/doChangeHeadlineInTask/idTask=' + ${task.idTask} + '/headlineOfTask='}"
+                       class="linkForHeadlineOfTask">
+                        Accept rename
+                    </a>
+                </td>
+                <td>
+                    <input type="text" class="titleOfTask form-control" name="titleOfTask" placeholder="Title of task"
+                           th:value="${task.titleOfTask}" required>
+                    <a th:href="@{'/doChangeTitleInTask/idTask=' + ${task.idTask} + '/titleOfTask='}"
+                       class="linkForTitleOfTask">
+                        Accept rename
+                    </a>
+                </td>
                 <td th:text="${task.date}"></td>
                 <td>
                     <span th:text="${task.done}"></span>
@@ -144,5 +171,6 @@
 <a href="#" id="back-to-top" title="Back to top">&uarr;</a>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script th:src="@{/js/backToTop.js}"></script>
+<script th:src="@{/js/renameHeadlineAndTitle.js}"></script>
 </body>
 </html>

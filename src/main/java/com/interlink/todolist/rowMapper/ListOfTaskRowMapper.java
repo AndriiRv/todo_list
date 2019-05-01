@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Component
-public class ListTaskRowMapper implements RowMapper<Task> {
+public class ListOfTaskRowMapper implements RowMapper<Task> {
 
     @Override
     public Task mapRow(ResultSet rs, int rowNum) throws SQLException {

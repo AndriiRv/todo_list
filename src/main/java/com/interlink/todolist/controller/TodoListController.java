@@ -32,7 +32,6 @@ public class TodoListController {
 
     @RequestMapping(value = "/addTask", method = RequestMethod.POST)
     public String saveTask(Task task, @RequestParam Integer idList) {
-        todoListService.getListById(idList);
         todoListService.addTask(task, idList);
         return "redirect:/";
     }
@@ -40,6 +39,33 @@ public class TodoListController {
     @RequestMapping(value = "/doDoneUndone/idTask={idTask}/doneUndone={done}", method = RequestMethod.GET)
     public String changeDoneInTask(@PathVariable int idTask, @PathVariable boolean done) {
         todoListService.changeTaskIsDone(idTask, done);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/doChangeTitleInTask/idTask={idTask}/titleOfTask={titleOfTask}", method = RequestMethod.GET)
+    public String changeTitleInTask(@PathVariable int idTask, @PathVariable String titleOfTask) {
+        String nameOfTable = "task";
+        String id = "id";
+        String nameOfColumn = "title";
+        todoListService.changeHeadlineAndTitleInTaskAndListOfTask(nameOfTable, id, idTask, nameOfColumn, titleOfTask);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/doChangeHeadlineInTask/idTask={idTask}/headlineOfTask={headlineOfTask}", method = RequestMethod.GET)
+    public String changeHeadlineInTask(@PathVariable int idTask, @PathVariable String headlineOfTask) {
+        String nameOfTable = "task";
+        String id = "id";
+        String nameOfColumn = "headline";
+        todoListService.changeHeadlineAndTitleInTaskAndListOfTask(nameOfTable, id, idTask, nameOfColumn, headlineOfTask);
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/doChangeHeadlineInListOfTask/idList={idList}/headlineInListOfTask={headlineInListOfTask}", method = RequestMethod.GET)
+    public String changeHeadlineInListOfTask(@PathVariable int idList, @PathVariable String headlineInListOfTask) {
+        String nameOfTable = "list_task";
+        String id = "id";
+        String nameOfColumn = "headline_of_list";
+        todoListService.changeHeadlineAndTitleInTaskAndListOfTask(nameOfTable, id, idList, nameOfColumn, headlineInListOfTask);
         return "redirect:/";
     }
 
@@ -51,7 +77,7 @@ public class TodoListController {
 
     @RequestMapping(value = "/doDeleteListTask/idList={idList}", method = RequestMethod.GET)
     public String deleteListTask(@PathVariable int idList) {
-        todoListService.deleteListTask(idList);
+        todoListService.deleteListOfTask(idList);
         return "redirect:/";
     }
 }
