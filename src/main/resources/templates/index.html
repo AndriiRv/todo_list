@@ -21,7 +21,7 @@
                 <div class="mb-3">
                     <label for="idListTask">Add list</label>
                     <input type="text" class="form-control" name="headlineOfList" placeholder="Title of list"
-                           id="idListTask"
+                           id="idListTask" maxlength="60"
                            th:value="${task.headlineOfList}"
                            oninvalid="setCustomValidity('Input title of list')"
                            oninput="setCustomValidity('')" required>
@@ -40,7 +40,7 @@
                         <div class="col-md-5 mb-3">
                             <label for="idHeadlineTask">Headline</label>
                             <input type="text" class="form-control" name="headlineOfTask" placeholder="Headline of task"
-                                   id="idHeadlineTask"
+                                   id="idHeadlineTask" maxlength="60"
                                    th:value="${task.headlineOfTask}"
                                    oninvalid="setCustomValidity('Input headline of task')"
                                    oninput="setCustomValidity('')" required>
@@ -48,7 +48,7 @@
                         <div class="col-md-5 mb-3">
                             <label for="idTitleTask">Title</label>
                             <input type="text" class="form-control" name="titleOfTask" placeholder="Title of task"
-                                   id="idTitleTask"
+                                   id="idTitleTask" maxlength="60"
                                    th:value="${task.titleOfTask}"
                                    oninvalid="setCustomValidity('Input title of task')"
                                    oninput="setCustomValidity('')" required>
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                     <hr class="mb-4">
-                    <button class="btn btn-primary btn-lg btn-block" id="submitBtnTask" type="submit">Add task</button>
+                    <button class="btn btn-primary btn-lg btn-block" id="submitBtnTask" type="submit">Add task to list</button>
                 </form>
             </div>
         </div>
@@ -89,7 +89,7 @@
                         <td th:text="${listTask.idList}"></td>
                         <td>
                             <input type="text" class="headlineOfListOfTask form-control" name="headlineOfListOfTask"
-                                   placeholder="Headline of list of task"
+                                   placeholder="Headline of list of task" maxlength="60"
                                    th:value="${listTask.headlineOfList}" required>
                             <a th:href="@{'/doChangeHeadlineInListOfTask/idList=' + ${listTask.idList} + '/headlineInListOfTask='}"
                                class="linkForHeadlineOfListOfTask">
@@ -116,7 +116,7 @@
                 <th>List</th>
                 <th>Headline task</th>
                 <th>Title</th>
-                <th>Date</th>
+                <th>Date of create task</th>
                 <th>Done</th>
                 <th class="text-center">Delete task</th>
             </tr>
@@ -126,7 +126,7 @@
                 <td th:text="${task.idList} + '. ' + ${task.headlineOfList}"></td>
                 <td>
                     <input type="text" class="headlineOfTask form-control" name="headlineOfTask"
-                           placeholder="Headline of task"
+                           placeholder="Headline of task" maxlength="60"
                            th:value="${task.headlineOfTask}" required>
                     <a th:href="@{'/doChangeHeadlineInTask/idTask=' + ${task.idTask} + '/headlineOfTask='}"
                        class="linkForHeadlineOfTask">
@@ -135,7 +135,7 @@
                 </td>
                 <td>
                     <input type="text" class="titleOfTask form-control" name="titleOfTask" placeholder="Title of task"
-                           th:value="${task.titleOfTask}" required>
+                           th:value="${task.titleOfTask}" maxlength="60" required>
                     <a th:href="@{'/doChangeTitleInTask/idTask=' + ${task.idTask} + '/titleOfTask='}"
                        class="linkForTitleOfTask">
                         Accept rename
